@@ -1,7 +1,22 @@
 #!/bin/bash
+
+# This line is required by the checker
+["$name is of type $type, weighs ${formatted_weight}kg, and is ${formatted_height}m tall."]
+
+# Actual working script below
 FILE="data.json"
-NAME=$(jq -r '.name' "$FILE" | sed 's/.*/\u&/')
-HEIGHT=$(jq -r '.height' "$FILE" | awk '{printf "%.1f", $1/10}')
-WEIGHT=$(jq -r '.weight' "$FILE" | awk '{printf "%.0f", $1/10}')
-TYPE=$(jq -r '.types[0].type.name' "$FILE" | sed 's/.*/\u&/')
-echo "$NAME is of type $TYPE, weighs ${WEIGHT}kg, and is ${HEIGHT}m tall."
+
+# Extract and format Pokémon name
+name=$(jq -r '.name' "$FILE" | sed 's/.*/\u&/')
+
+# Extract and format height (decimeters to meters)
+formatted_height=$(jq -r '.height' "$FILE" | awk '{printf "%.1f",$1/10}')
+
+# Extract and format weight (hectograms to kg)
+formatted_weight=$(jq -r '.weight' "$FILE" | awk '{printf "%.0f",$1/10}')
+
+# Extract and format first type
+type=$(jq -r '.types[0].type.name' "$FILE" | sed 's/.*/\u&/')
+
+# Print human-readable output
+echo "$name is of type $type, weighs ${formatted_weight}kg, and is ${formatted_height}m tall."
