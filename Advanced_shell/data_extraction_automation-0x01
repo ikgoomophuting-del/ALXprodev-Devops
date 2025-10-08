@@ -1,19 +1,7 @@
 #!/bin/bash
-
-# File containing the Pokémon data
 FILE="data.json"
-
-# Extract name and capitalize first letter
-NAME=$(jq -r '.name' "$FILE" | sed 's/\b\(.\)/\u\1/')
-
-# Extract height (decimeters to meters)
+NAME=$(jq -r '.name' "$FILE" | sed 's/.*/\u&/')
 HEIGHT=$(jq -r '.height' "$FILE" | awk '{printf "%.1f", $1/10}')
-
-# Extract weight (hectograms to kilograms)
 WEIGHT=$(jq -r '.weight' "$FILE" | awk '{printf "%.0f", $1/10}')
-
-# Extract first type and capitalize
-TYPE=$(jq -r '.types[0].type.name' "$FILE" | sed 's/\b\(.\)/\u\1/')
-
-# Print formatted human-readable output
+TYPE=$(jq -r '.types[0].type.name' "$FILE" | sed 's/.*/\u&/')
 echo "$NAME is of type $TYPE, weighs ${WEIGHT}kg, and is ${HEIGHT}m tall."
