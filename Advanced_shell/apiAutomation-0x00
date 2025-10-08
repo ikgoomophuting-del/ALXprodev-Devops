@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Define the Pokémon name
+POKEMON="pikachu"
+
+# Define output files
+OUTPUT_FILE="data.json"
+ERROR_FILE="errors.txt"
+
+# Make API request
+RESPONSE=$(curl -s -w "%{http_code}" -o "$OUTPUT_FILE" "https://pokeapi.co/api/v2/pokemon/$POKEMON")
+
+# Extract the HTTP status code
+HTTP_CODE="${RESPONSE: -3}"
+
+# Check if request was successful (HTTP 200)
+if [ "$HTTP_CODE" -ne 200 ]; then
+    echo "Error: Failed to fetch data for $POKEMON. HTTP status code: $HTTP_CODE" >> "$ERROR_FILE"
+    rm -f "$OUTPUT_FILE"  # Remove incomplete data file
+else
+    echo "Data for $POKEMON saved to $OUTPUT_FILE"
+fi
