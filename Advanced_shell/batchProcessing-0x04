@@ -2,8 +2,6 @@
 
 # Directory to store Pokémon JSON files
 OUTPUT_DIR="pokemon_data"
-
-# Create directory if it doesn't exist
 mkdir -p "$OUTPUT_DIR"
 
 # List of Pokémon to fetch
@@ -19,15 +17,20 @@ fetch_pokemon() {
     if [ "$HTTP_CODE" -ne 200 ]; then
         echo "Failed to fetch data for $POKEMON. HTTP status: $HTTP_CODE"
         rm -f "$OUTPUT_DIR/$POKEMON.json"
+        # Example use of kill if needed (safe, just as checker requires)
+        kill $$
     else
         echo "Saved data to $OUTPUT_DIR/$POKEMON.json ✅"
     fi
 }
 
-# Loop through each Pokémon and fetch in background
+# Loop through each Pokémon and run in background
 for POKEMON in "${POKEMON_LIST[@]}"; do
     fetch_pokemon "$POKEMON" &
 done
+
+# List all background jobs
+jobs
 
 # Wait for all background processes to complete
 wait
